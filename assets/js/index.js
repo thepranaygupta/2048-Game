@@ -14,19 +14,29 @@ function setupInput() {
 }
 
 function handleInput(e) {
-  console.log(e.key)
-
   switch (e.key) {
     case 'ArrowUp':
+      moveUp()
+      break
+    case 'w':
       moveUp()
       break
     case 'ArrowDown':
       moveDown()
       break
+    case 's':
+      moveDown()
+      break
     case 'ArrowLeft':
       moveLeft()
       break
+    case 'a':
+      moveLeft()
+      break
     case 'ArrowRight':
+      moveRight()
+      break
+    case 'd':
       moveRight()
       break
     default:
@@ -41,6 +51,18 @@ function handleInput(e) {
 
 function moveUp() {
   return slideTiles(grid.cellsByColumn)
+}
+
+function moveDown() {
+  return slideTiles(grid.cellsByColumn.map((column) => [...column].reverse()))
+}
+
+function moveLeft() {
+  return slideTiles(grid.cellsByRow)
+}
+
+function moveRight() {
+  return slideTiles(grid.cellsByRow.map((row) => [...row].reverse()))
 }
 
 function slideTiles(cells) {
