@@ -16,27 +16,59 @@ function setupInput() {
 async function handleInput(e) {
   switch (e.key) {
     case 'ArrowUp':
+      if (!canMoveUp()) {
+        setupInput()
+        return
+      }
       await moveUp()
       break
     case 'w':
+      if (!canMoveUp()) {
+        setupInput()
+        return
+      }
       await moveUp()
       break
     case 'ArrowDown':
+      if (!canMoveDown()) {
+        setupInput()
+        return
+      }
       await moveDown()
       break
     case 's':
+      if (!canMoveDown()) {
+        setupInput()
+        return
+      }
       await moveDown()
       break
     case 'ArrowLeft':
+      if (!canMoveLeft()) {
+        setupInput()
+        return
+      }
       await moveLeft()
       break
     case 'a':
+      if (!canMoveLeft()) {
+        setupInput()
+        return
+      }
       await moveLeft()
       break
     case 'ArrowRight':
+      if (!canMoveRight()) {
+        setupInput()
+        return
+      }
       await moveRight()
       break
     case 'd':
+      if (!canMoveRight()) {
+        setupInput()
+        return
+      }
       await moveRight()
       break
     default:
@@ -45,6 +77,9 @@ async function handleInput(e) {
   }
 
   grid.cells.forEach((cell) => cell.mergeTiles())
+
+  const newTile = new Tile(gameBoard)
+  grid.randomEmptyCell().tile = newTile
 
   setupInput()
 }
@@ -92,4 +127,28 @@ function slideTiles(cells) {
       return promises
     })
   )
+}
+
+function canMoveUp() {
+  return canMove(grid.cellsByColumn)
+}
+function canMoveDown() {
+  return canMove(grid.cellsByColumn.map((column) => [...column].reverse()))
+}
+function canMoveLeft() {
+  return canMove(grid.cellsByRow)
+}
+function canMoveRight() {
+  return canMove(grid.cellsByRow.map((row) => [...row].reverse()))
+}
+
+function canMove(cells) {
+  return cells.some((group) => {
+    return group.some((cell, index) => {
+      if (index === 0) return false
+      if (cell.tile == null) return false
+      const moveToCell = group[index - 1]
+      return moveToCell.canAccept(cell.tile)
+    })
+  })
 }
